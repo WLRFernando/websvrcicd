@@ -1,0 +1,60 @@
+version: 2.1
+executors:
+  python:
+    docker:
+      - image: circleci/python:3.6.1
+    working_directory: ~/repo
+commands:
+  restore-cache-python:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "requirements.txt" }}
+            - v1-dependencies-
+
+  install-dependencies:
+    steps:
+      - run:
+          name: Install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+  save-cache-python:
+    steps:
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+  deploy:
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "51:05:17:f8:bf:68:f0:7c:86:8a:88:42:4b:20:b3:6b"
+      - run:
+          name: check ssh
+          command: |
+            ssh ec2-user@54.179.152.172
+            git clone https://github.com/WLRFernando/websvrcicd.git
+            ls -a
+
+
+jobs:
+  build:
+    executor: python
+    steps:
+      - checkout
+      - restore-cache-python
+      - install-dependencies
+      - save-cache-python
+      - deploy
+
+workflows:
+  deploy-or-update-infrastructure:
+    jobs:
+      - build:
+          context: aws
+          filters:
+            branches:
+              only: master
