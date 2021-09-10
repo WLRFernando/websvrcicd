@@ -35,7 +35,7 @@ commands:
       - run:
           name: check ssh
           command: |
-            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ansi@54.179.152.172 'cd /home/cicd && ./script.sh'
+            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ansi@54.179.152.172 './home/cicd/script.sh'
 
 jobs:
   build:
