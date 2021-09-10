@@ -35,7 +35,7 @@ commands:
       - run:
           name: check ssh
           command: |
-            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ansi@54.179.152.172 'git clone https://github.com/WLRFernando/websvrcicd.git && ls -a'
+            ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ansi@54.179.152.172 'git clone https://github.com/WLRFernando/websvrcicd.git && pwd'
 
 jobs:
   build:
